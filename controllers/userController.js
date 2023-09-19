@@ -67,9 +67,29 @@ const deleteUserById = async (req, res) => {
   }
 };
 
+const findUsersByLimit = async (req, res) => {
+  try {
+    const { start, limit } = req.query; // Get start and limit from query parameters
+
+    const options = {
+      offset: start ? parseInt(start) : 0, // Convert start to an integer or default to 0
+      limit: limit ? parseInt(limit) : 10, // Convert limit to an integer or default to 10
+      order: [["id", "ASC"]], // Order by the 'id' column in ascending order (DESC for decending order)
+    };
+
+    const users = await User.findAll(options);
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   createUser,
   listUsers,
   updateUser,
   deleteUserById,
+  findUsersByLimit,
 };
